@@ -1,0 +1,42 @@
+event-backend/node_modules
+event-backend/public/hot
+event-backend/public/storage
+event-backend/storage/*.key
+event-backend/vendor
+event-backend/.env
+event-backend/.env.backup
+event-backend/.phpunit.result.cache
+event-backend/docker-compose.override.yml
+event-backend/Homestead.json
+event-backend/Homestead.yaml
+event-backend/npm-debug.log
+event-backend/yarn-error.log
+event-backend/.idea
+event-backend/.vscode
+
+
+event-frontend/.DS_Store
+event-frontend/node_modules
+event-frontend/dist
+
+
+# local env files
+event-frontend/.env.local
+event-frontend/.env.*.local
+
+# Log files
+event-frontend/npm-debug.log*
+event-frontend/yarn-debug.log*
+event-frontend/yarn-error.log*
+event-frontend/pnpm-debug.log*
+
+# Editor directories and files
+event-frontend/.idea
+event-frontend/.vscode
+event-frontend/*.suo
+event-frontend/*.ntvs*
+event-frontend/*.njsproj
+event-frontend/*.sln
+event-frontend/*.sw?
+
+
