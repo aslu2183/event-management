@@ -9,18 +9,7 @@
                 </CHeaderBrand>
 
                 <CHeaderNav class="d-none d-md-flex me-auto">
-                    <CNavItem>
-                        <CNavLink href="/dashboard"> Dashboard </CNavLink>
-                    </CNavItem>
-
-                    <CNavItem>
-                        <CNavLink href="#">Users</CNavLink>
-                    </CNavItem>
-
-                    <CNavItem>
-                        <CNavLink href="#">Settings</CNavLink>
-                    </CNavItem>
-
+                    
                 </CHeaderNav>
 
                 <CHeaderNav>
@@ -35,7 +24,7 @@
                             <CDropdownItem>
                                 <CIcon icon="cil-envelope-open" /> Messages
                             </CDropdownItem>
-                            <CDropdownItem>
+                            <CDropdownItem @click="logout">
                                 <CIcon icon="cil-lock-locked" /> Logout
                             </CDropdownItem>
                         </CDropdownMenu>    
@@ -47,7 +36,6 @@
 </template>
 
 <script>
-import { CHeader, CContainer, CHeaderBrand, CHeaderToggler, CCollapse, CHeaderNav, CNavItem, CNavLink, CDropdown,CDropdownItem, CDropdownToggle, CAvatar, CDropdownMenu, CDropdownHeader} from '@coreui/vue'
 import { logo } from '@/assets/brand/logo'
 import avatar from '@/assets/images/avatars/8.jpg'
 export default {
@@ -60,27 +48,15 @@ export default {
     },
     methods : {
         toggle_sidebar(){
-            console.log(this.$store.state.sidebarVisible)
             this.$store.commit('toggleSidebar')
+        },
+        logout(){
+            this.$store.commit('setLogout')
+            this.$router.push({name:"login"})
         }
     },
     name : "Header",
-    components : {
-        CHeader,
-        CContainer,
-        CHeaderBrand,
-        CHeaderToggler,
-        CCollapse,
-        CHeaderNav,
-        CNavItem,
-        CNavLink,
-        CDropdown,
-        CDropdownItem,
-        CDropdownToggle,
-        CAvatar,
-        CDropdownMenu,
-        CDropdownHeader
-    }
+    
 }
 </script>
 

@@ -7,26 +7,48 @@
     >
         <CSidebarBrand>Sidebar Brand </CSidebarBrand>
         <CSidebarNav>
-            <li class="nav-title">Nav Title</li>
-            <CNavItem href="#">
-            <CIcon  customClassName="nav-icon" icon="cil-speedometer"/>
-            Nav item
-            </CNavItem>
-            <CNavItem href="#">
-                <CIcon  customClassName="nav-icon" icon="cil-speedometer"/>
-                With badge
-                <CBadge color="primary ms-auto">NEW</CBadge>
-            </CNavItem>
+            <li class="nav-title">DashBoard</li>
+            <router-link :to="{'name':'login'}" style="text-decoration:none">
+                <CNavItem href="#">
+                    <CIcon  customClassName="nav-icon" icon="cil-home"/>
+                        Home
+                </CNavItem>
+            </router-link>
+            
             <CNavGroup>
-            <template #togglerContent>
-                <CIcon  customClassName="nav-icon" icon="cil-puzzle"/> Nav dropdown
-            </template>
-            <CNavItem href="#">
-                <CIcon  customClassName="nav-icon" icon="cil-puzzle"/> Nav dropdown item
-            </CNavItem>
-            <CNavItem href="#">
-                <CIcon  customClassName="nav-icon" icon="cil-puzzle"/> Nav dropdown item
-            </CNavItem>
+                <template #togglerContent>
+                    <CIcon  customClassName="nav-icon" icon="cil-puzzle"/> Events
+                </template>
+                <CNavItem href="#">
+                    <CIcon  customClassName="nav-icon" icon="cil-note-add"/> Create Event
+                </CNavItem>
+                <CNavItem href="#">
+                    <CIcon  customClassName="nav-icon" icon="cil-puzzle"/> List Events
+                </CNavItem>
+            </CNavGroup>
+
+            <CNavGroup>
+                <template #togglerContent>
+                    <CIcon  customClassName="nav-icon" icon="cil-puzzle"/> Bookings
+                </template>
+                <CNavItem href="#">
+                    <CIcon  customClassName="nav-icon" icon="cil-note-add"/> Create Booking
+                </CNavItem>
+                <CNavItem href="#">
+                    <CIcon  customClassName="nav-icon" icon="cil-puzzle"/> List Bookings
+                </CNavItem>
+            </CNavGroup>
+
+            <CNavGroup>
+                <template #togglerContent>
+                    <CIcon  customClassName="nav-icon" icon="cil-puzzle"/> Reports
+                </template>
+                <CNavItem href="#">
+                    <CIcon  customClassName="nav-icon" icon="cil-puzzle"/> Sales Report
+                </CNavItem>
+                <!-- <CNavItem href="#">
+                    <CIcon  customClassName="nav-icon" icon="cil-puzzle"/> List Bookings
+                </CNavItem> -->
             </CNavGroup>
         </CSidebarNav>
         
@@ -35,18 +57,8 @@
 </template>
 
 <script>
-import { CSidebar, CSidebarBrand, CSidebarNav, CNavItem, CNavGroup } from '@coreui/vue'
-
 export default {
     name : "SideBar",
-    components : {
-        CSidebar,
-        CSidebarBrand,
-        CSidebarNav,
-        CNavItem,
-        CNavGroup,
-        
-    },
     methods : {
         change_visible(e){
             this.$store.commit('updateSidebarVisible',{

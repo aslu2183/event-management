@@ -30,7 +30,7 @@
                   </CInputGroup>
                   <CRow>
                     <CCol :xs="6">
-                      <CButton color="primary" class="px-4"> Login </CButton>
+                      <CButton color="primary" class="px-4" @click="handleSubmit"> Login </CButton>
                     </CCol>
                     <CCol :xs="6" class="text-right">
                       <CButton color="link" class="px-0">
@@ -65,23 +65,16 @@
 
 <script>
 // @ is an alias to /src
-import { CCol,CContainer,CRow, CCard,CCardBody, CButton,CForm, CCardGroup, CInputGroup, CInputGroupText,CFormInput} from '@coreui/vue'
+
 
 export default {
   name: 'LoginView',
-  components: {
-    CContainer,
-    CCol,
-    CRow,
-    CCard,
-    CCardBody,
-    CButton,
-    CForm,
-    CCardGroup,
-    CInputGroup,
-    CInputGroupText,
-    CFormInput,
-    
+  methods : {
+    handleSubmit() {
+      this.$store.commit('setLogin');
+      this.$router.push({name:"dashboard"})
+    }
   }
+  
 }
 </script>
