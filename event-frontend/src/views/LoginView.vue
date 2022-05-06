@@ -72,6 +72,7 @@ export default {
   methods : {
     handleSubmit() {
       this.$store.commit('setLogin');
+      localStorage.setItem("token",1);
       this.$router.push({name:"dashboard"})
     }
   }
