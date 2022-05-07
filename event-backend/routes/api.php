@@ -20,3 +20,25 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('/login','LoginController@Login');
 Route::middleware('auth:api')->get('/logout','LoginController@Logout');
+
+Route::middleware('auth:api')->get('/events','EventController@index');
+Route::middleware('auth:api')->post('/add-event','EventController@store');
+
+// Route::get('/events', function(Request $request){
+//     return Event::with('lineups')->get();
+// });
+
+// Route::post('/add-event', function(Request $request){
+//     $q = Event::create([
+//         'event_title'       => 'Aslam',
+//         'event_description' => 'check',
+//         'event_start'       => '2022-05-07',
+//         'event_end'         => '2022-05-27',
+//         'event_lineups'     => 6
+//     ]);
+//     return $q->lineups()->create([
+//         'event_line_up_title' => 'Line Up 1',
+//         'event_line_up_start' => '13:00:00',
+//         'event_line_up_end'   => '14:00:00' 
+//     ]);
+// });
