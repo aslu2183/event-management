@@ -23,6 +23,8 @@ Route::middleware('auth:api')->get('/logout','LoginController@Logout');
 
 Route::middleware('auth:api')->get('/events','EventController@index');
 Route::middleware('auth:api')->post('/add-event','EventController@store');
+Route::middleware('auth:api')->post('/create-event-ticket','EventController@createTickets');
+Route::middleware('auth:api')->get('/get-event-tickets/{id}','EventController@eventTickets');
 
 // Route::get('/events', function(Request $request){
 //     return Event::with('lineups')->get();

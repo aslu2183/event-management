@@ -6,5 +6,11 @@ export default {
     },
     list_events(){
         return Api().get('/events')
+    },
+    create_tickets(form){
+        return Api().post('/create-event-ticket',form)
+    },
+    get_event_tickets(id){
+        return Api().get('/get-event-tickets/'+id)
     }
 }

@@ -20,4 +20,8 @@ class Event extends Model
     public function lineups(){
         return $this->hasMany('App\Models\EventLineUp','event_line_up_eventid','event_id');
     }
+
+    public function tickets(){
+        return $this->hasMany('App\Models\EventTicket','ticket_event_id','event_id');
+    }
 }

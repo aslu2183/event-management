@@ -95,5 +95,24 @@ class EventController extends Controller
         //
     }
 
+
+    public function createTickets(Request $request){
+        $request->validate([
+            'ticket_label'    => ['required'],
+            'ticket_capacity' => ['required'],
+            'ticket_price'    => ['required'],
+        ]);
+        $data     = $request->all();
+        $event_id = $data['event_id'];
+        unset($data['event_id']); 
+
+        $q = Event::find($event_id);
+        return $q->tickets()->create($data);
+    }
+
+    public function eventTickets($id){
+        return Event::with('tickets')->find($id);
+    }
+
     
 }
