@@ -38,6 +38,7 @@
 <script>
 import { logo } from '@/assets/brand/logo'
 import avatar from '@/assets/images/avatars/8.jpg'
+import User from '../apis/Users'
 export default {
     data() {
         return {
@@ -51,9 +52,17 @@ export default {
             this.$store.commit('toggleSidebar')
         },
         logout(){
-            this.$store.commit('setLogout')
-            localStorage.removeItem("token")
-            this.$router.push({name:"login"})
+            User.signOut().then((response) => {
+                this.$store.commit('setLogout')
+                localStorage.removeItem("token")
+                this.$router.push({name:"login"})
+            }).catch((error) => {
+                if(error.response.status === 401){
+                    this.$store.commit('setLogout')
+                    localStorage.removeItem("token")
+                    this.$router.push({name:"login"})
+                }
+            })
         }
     },
     name : "Header",

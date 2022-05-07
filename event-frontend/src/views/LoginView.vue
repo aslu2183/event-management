@@ -9,16 +9,22 @@
                 <CForm>
                   <h1>Login</h1>
                   <p class="text-medium-emphasis">Sign In to your account</p>
-                  <CInputGroup class="mb-3">
+                  <div class="mb-3">
+                  <CInputGroup >
                     <CInputGroupText>
                       <CIcon icon="cil-user" />
                     </CInputGroupText>
                     <CFormInput
                       placeholder="Username"
                       autocomplete="username"
+                      v-model="form.email"
                     />
+                    
                   </CInputGroup>
-                  <CInputGroup class="mb-4">
+                  <span class="error" v-if="errors.email">{{ errors.email[0] }}</span>
+                  </div>
+                  <div class="mb-4">
+                  <CInputGroup >
                     <CInputGroupText>
                       <CIcon icon="cil-lock-locked" />
                     </CInputGroupText>
@@ -26,8 +32,12 @@
                       type="password"
                       placeholder="Password"
                       autocomplete="current-password"
+                      v-model="form.password"
                     />
+                    
                   </CInputGroup>
+                  <span class="error" v-if="errors.password">{{ errors.password[0] }}</span>
+                  </div>
                   <CRow>
                     <CCol :xs="6">
                       <CButton color="primary" class="px-4" @click="handleSubmit"> Login </CButton>
@@ -65,17 +75,39 @@
 
 <script>
 // @ is an alias to /src
-
+import User from '../apis/Users';
 
 export default {
   name: 'LoginView',
+  data() {
+    return {
+      form : {
+        email    : '',
+        password : ''
+      },
+      errors : []
+    }
+  },
   methods : {
     handleSubmit() {
-      this.$store.commit('setLogin');
-      localStorage.setItem("token",1);
-      this.$router.push({name:"dashboard"})
+      User.signIn(this.form).then((response) => {
+        localStorage.setItem("token",response.data);
+        this.$store.commit('setLogin');
+        this.$router.push({name:"dashboard"})
+      }).catch((error) => {
+        if(error.response.status === 422){
+          this.errors = error.response.data.errors
+        }
+      });
+      
     }
   }
   
 }
 </script>
+
+<style scoped>
+.error {
+  color:red
+}
+</style>
