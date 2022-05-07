@@ -26,21 +26,9 @@ Route::middleware('auth:api')->post('/add-event','EventController@store');
 Route::middleware('auth:api')->post('/create-event-ticket','EventController@createTickets');
 Route::middleware('auth:api')->get('/get-event-tickets/{id}','EventController@eventTickets');
 
-// Route::get('/events', function(Request $request){
-//     return Event::with('lineups')->get();
-// });
 
-// Route::post('/add-event', function(Request $request){
-//     $q = Event::create([
-//         'event_title'       => 'Aslam',
-//         'event_description' => 'check',
-//         'event_start'       => '2022-05-07',
-//         'event_end'         => '2022-05-27',
-//         'event_lineups'     => 6
-//     ]);
-//     return $q->lineups()->create([
-//         'event_line_up_title' => 'Line Up 1',
-//         'event_line_up_start' => '13:00:00',
-//         'event_line_up_end'   => '14:00:00' 
-//     ]);
-// });
+Route::middleware('auth:api')->get('/bookings','BookingController@index');
+Route::middleware('auth:api')->post('/add-booking','BookingController@store');
+Route::middleware('auth:api')->get('/get-booking/{id}','BookingController@show');
+
+

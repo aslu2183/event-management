@@ -16,7 +16,7 @@ class EventController extends Controller
 
     public function index()
     {
-        return Event::with('lineups')->get();
+        return Event::with('lineups','tickets')->get();
     }
 
     /**
