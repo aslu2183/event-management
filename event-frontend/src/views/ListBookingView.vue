@@ -17,30 +17,29 @@
                         <CTableHeaderCell scope="col" style="text-align:center">Action</CTableHeaderCell>
                       </CTableRow>
                     </CTableHead>
-                    <CTableBody>
+                    <CTableBody v-if="booking_list.length > 0">
                       <CTableRow v-for="(booking,index) in booking_list" :key="booking.booking_id" style="cursor:pointer">
                         <CTableHeaderCell scope="row">{{ index + 1}}</CTableHeaderCell>
                         <CTableDataCell>{{ booking.booking_person }}</CTableDataCell>
                         <CTableDataCell>{{ booking.booking_mobile }}</CTableDataCell>
                         <CTableDataCell>{{ booking.get_events.event_title }}</CTableDataCell>
                         <CTableDataCell>{{ booking.get_tickets.ticket_label }}</CTableDataCell>
-                        <!-- <CTableDataCell style="text-align:center" >
-                            <CButton color="primary" variant="outline" size="sm" class="m-1" @click="openModal(event.event_id)">
-                                <CIcon icon="cil-plus" size="sm"></CIcon>
-                            </CButton>
-                            <CButton color="success" variant="outline" size="sm" class="m-1" @click="openViewModal(event.event_id)">
-                                <CIcon icon="cil-folder-open" size="sm"></CIcon>
-                            </CButton>
-                        </CTableDataCell > -->
+                       
                         <CTableDataCell style="text-align:center" >
-                            <CButton color="danger" variant="outline" size="sm" class="m-1">
+                            <CButton color="danger" variant="outline" size="sm" class="m-1" @click="deleteBooking(booking)">
                                 <CIcon icon="cil-trash" size="sm"></CIcon>
                             </CButton>
-                             <CButton color="success" variant="outline" size="sm" class="m-1">
+                             <CButton color="success" variant="outline" size="sm" class="m-1" @click="showBookingModal(booking)">
                                 <CIcon icon="cil-folder-open" size="sm"></CIcon>
                             </CButton>
                         </CTableDataCell>
                       </CTableRow>
+                    </CTableBody>
+
+                    <CTableBody v-else>
+                        <CTableRow>
+                          <CTableDataCell colspan="5" style="text-align:center">No Records Found</CTableDataCell>
+                        </CTableRow>
                     </CTableBody>
                   </CTable>
                 </CCardBody>
@@ -48,55 +47,43 @@
             </CCol>
           </CRow>
 
-        <!-- For Creating Tickets -->
-        <!-- <CModal alignment="center" :visible="showModal" @close="() => { showModal = false }" backdrop="static">
-            <CModalHeader>
-                <CModalTitle>Create Ticket</CModalTitle>
-            </CModalHeader>
-            <CModalBody>
-                <CForm>
-                    <div class="mb-3">
-                        <CFormLabel for="exampleFormControlInput1">Label</CFormLabel>
-                        <CFormInput type="text" id="exampleFormControlInput1" placeholder="Ticket Label" v-model="form.ticket_label"/>
-                        <span class="error" v-if="errors.ticket_label">{{ errors.ticket_label[0] }}</span>
-                    </div>
-                    <div class="mb-3">
-                        <CFormLabel for="exampleFormControlInput1">Capacity</CFormLabel>
-                        <CFormInput type="number" id="exampleFormControlInput1" placeholder="Ticket Capacity" v-model="form.ticket_capacity"/>
-                        <span class="error" v-if="errors.ticket_capacity">{{ errors.ticket_capacity[0] }}</span>
-                    </div>
-                    <div class="mb-3">
-                        <CFormLabel for="exampleFormControlInput1">Price</CFormLabel>
-                        <CFormInput type="number" id="exampleFormControlInput1" placeholder="Ticket Price" v-model="form.ticket_price"/>
-                        <span class="error" v-if="errors.ticket_price">{{ errors.ticket_price[0] }}</span>
-                    </div>
-                </CForm>
-            </CModalBody>
-            <CModalFooter>
-                <CButton color="secondary" @click="() => { showModal = false }">
-                    Close
-                </CButton>
-                <CButton color="primary" @click="handleSave">Save</CButton>
-            </CModalFooter>
-        </CModal> -->
-
          <!-- For Viewing Tickets -->
-        <!-- <CModal alignment="center" size="lg" :visible="showViewModal" @close="() => { showViewModal = false }" backdrop="static">
+        <CModal alignment="center" size="lg" scrollable :visible="showViewModal" @close="() => { showViewModal = false }" backdrop="static">
             <CModalHeader>
-                <CModalTitle>List Event Tickets</CModalTitle>
+                <CModalTitle>Booking Details</CModalTitle>
             </CModalHeader>
             <CModalBody>
                 <CRow>
-                    <CCol :xs="4" v-for="ticket in event_tickets" :key="ticket.ticket_id">
-                        <CWidgetStatsB
-                            class="mb-3"
-                            :progress="{ color: 'success', value: 75}"
-                            >
-                            <template #text>Capacity {{ ticket.ticket_capacity }}</template>
-                            <template #title>{{ ticket.ticket_label }}</template>
-                            <template #value>{{ ticket.ticket_price }}</template>
-                        </CWidgetStatsB>
-                    </CCol>
+                  <CCol :xs="12">
+                    <CTable hover responsive bordered>
+                        <CTableBody>
+                          <CTableRow>
+                            <CTableDataCell>Participant</CTableDataCell>
+                            <CTableDataCell>{{ booking_data.booking_person }}</CTableDataCell>
+                          </CTableRow>
+                          <CTableRow>
+                            <CTableDataCell>Email</CTableDataCell>
+                            <CTableDataCell>{{ booking_data.booking_email }}</CTableDataCell>
+                          </CTableRow>
+                          <CTableRow>
+                            <CTableDataCell>Mobile</CTableDataCell>
+                            <CTableDataCell>{{ booking_data.booking_mobile }}</CTableDataCell>
+                          </CTableRow>
+                          <CTableRow>
+                            <CTableDataCell>Event</CTableDataCell>
+                            <CTableDataCell>{{ booking_data?.get_events?.event_title }}</CTableDataCell>
+                          </CTableRow>
+                          <CTableRow>
+                            <CTableDataCell>Ticket Type</CTableDataCell>
+                            <CTableDataCell>{{ booking_data?.get_tickets?.ticket_label }}</CTableDataCell>
+                          </CTableRow>
+                          <CTableRow>
+                            <CTableDataCell>Ticket Price</CTableDataCell>
+                            <CTableDataCell>{{ booking_data?.get_tickets?.ticket_price }}</CTableDataCell>
+                          </CTableRow>
+                        </CTableBody>    
+                    </CTable>
+                  </CCol>
                 </CRow>    
             </CModalBody>
             <CModalFooter>
@@ -104,7 +91,7 @@
                     Close
                 </CButton>
             </CModalFooter>
-        </CModal> -->
+        </CModal>
 </template>
 
 <script>
@@ -112,12 +99,40 @@ import Booking from '../apis/Booking'
 export default {
   data(){
     return {
-      booking_list : []
+      booking_list : [],
+      showViewModal: false,
+      booking_data : {}
+    }
+  },
+  methods : {
+    showBookingModal(booking){
+      this.showViewModal = true
+      Booking.show_booking(booking.booking_id).then((response) => {
+        this.booking_data = response.data
+      }).catch((error) => {
+        if(error.response.status === 401){
+          this.$store.commit('setLogout')
+          localStorage.removeItem("token")
+          this.$router.push({name:"login"})
+        }
+      })
+    },
+    deleteBooking(booking){
+      Booking.remove_booking(booking.booking_id).then((response) => {
+        this.booking_list = this.booking_list.filter((item) => {
+          return item.booking_id != booking.booking_id
+        })
+      }).catch((error) => {
+          if(error.response.status === 401){
+            this.$store.commit('setLogout')
+            localStorage.removeItem("token")
+            this.$router.push({name:"login"})
+          }
+      })
     }
   },
   mounted(){
     Booking.list_booking().then((response) => {
-      console.log(response.data);
       this.booking_list = response.data
     }).catch((error) => {
       if(error.response.status === 401){

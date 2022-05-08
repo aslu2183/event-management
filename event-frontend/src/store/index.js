@@ -4,7 +4,8 @@ export default createStore({
   state: {
     sidebarVisible: '',
     sidebarUnfoldable: false,
-    isLoggedIn : false
+    isLoggedIn : false,
+    user : {}
   },
   mutations: {
     toggleSidebar(state) {
@@ -21,6 +22,10 @@ export default createStore({
     },
     setLogout(state){
       state.isLoggedIn = false
+      state.user = {}
+    },
+    setUserData(state,payload) {
+      state.user = payload
     }
   },
   actions: {},

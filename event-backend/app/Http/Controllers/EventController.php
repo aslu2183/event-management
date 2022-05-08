@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Event;
+use App\Models\EventTicket;
+use App\Models\Booking;
 use Illuminate\Validation\ValidationException;
 
 class EventController extends Controller
@@ -92,7 +94,14 @@ class EventController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $booking = Booking::where("booking_event",$id)->get();
+        $tickets = EventTicket::where("ticket_event_id",$id)->get();
+        if(count($booking) <= 0 && count($tickets) <= 0){
+            $event = Event::find($id);
+            $event->lineups()->delete();
+            return $event->delete();
+        }
+        return 0;
     }
 
 
@@ -112,6 +121,59 @@ class EventController extends Controller
 
     public function eventTickets($id){
         return Event::with('tickets')->find($id);
+    }
+
+    public function listTickets(){
+        return EventTicket::all();
+    }
+
+    public function eventsReport(Request $request){
+        $request->validate([
+            'event'     => ['required'],
+        ]);
+        $booking = Booking::with('getTickets')->where('booking_event',$request->event);
+        if($request->from_date && $request->to_date){
+            $request->validate([
+                'from_date' => ['before_or_equal:to_date'],
+                'to_date'   => ['after_or_equal:from_date']
+            ],[
+                'from_date.before_or_equal' => 'Invalid Date Range',
+                'to_date.after_or_equal'    => 'Invalid Date Range' 
+            ]);
+            $booking->whereDate('created_at','>=',$request->from_date);
+            $booking->whereDate('created_at','<=',$request->to_date);
+        }
+        return $booking->get();
+        
+    }
+
+    public function ticketsReport(Request $request){
+        $request->validate([
+            'ticket'     => ['required'],
+        ]);
+        $booking = Booking::with('getEvents')->where('booking_ticket',$request->ticket);
+        if($request->from_date && $request->to_date){
+            $request->validate([
+                'from_date' => ['before_or_equal:to_date'],
+                'to_date'   => ['after_or_equal:from_date']
+            ],[
+                'from_date.before_or_equal' => 'Invalid Date Range',
+                'to_date.after_or_equal'    => 'Invalid Date Range' 
+            ]);
+            $booking->whereDate('created_at','>=',$request->from_date);
+            $booking->whereDate('created_at','<=',$request->to_date);
+        }
+        return $booking->get();
+        
+    }
+
+    public function removeTickets($id){
+        $booking = Booking::where("booking_ticket",$id)->get();
+        if(count($booking) <= 0){
+            return EventTicket::where('ticket_id', $id)->delete();
+        }
+        return 0;
+        
     }
 
     

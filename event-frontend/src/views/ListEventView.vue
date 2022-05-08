@@ -6,7 +6,7 @@
                   <strong>Event Listing</strong>
                 </CCardHeader>
                 <CCardBody>
-                  <CTable hover>
+                  <CTable hover responsive>
                     <CTableHead>
                       <CTableRow>
                         <CTableHeaderCell scope="col">#</CTableHeaderCell>
@@ -17,7 +17,8 @@
                         <CTableHeaderCell scope="col" style="text-align:center">Action</CTableHeaderCell>
                       </CTableRow>
                     </CTableHead>
-                    <CTableBody>
+
+                    <CTableBody v-if="event_list.length > 0">
                       <CTableRow v-for="(event,index) in event_list" :key="event.event_id" style="cursor:pointer">
                         <CTableHeaderCell scope="row">{{ index + 1}}</CTableHeaderCell>
                         <CTableDataCell>{{ event.event_title }}</CTableDataCell>
@@ -32,7 +33,7 @@
                             </CButton>
                         </CTableDataCell >
                         <CTableDataCell style="text-align:center" >
-                            <CButton color="danger" variant="outline" size="sm" class="m-1">
+                            <CButton color="danger" variant="outline" size="sm" class="m-1" @click="deleteEvent(event)">
                                 <CIcon icon="cil-trash" size="sm"></CIcon>
                             </CButton>
                              <CButton color="success" variant="outline" size="sm" class="m-1">
@@ -40,6 +41,12 @@
                             </CButton>
                         </CTableDataCell>
                       </CTableRow>
+                    </CTableBody>
+
+                    <CTableBody v-else>
+                        <CTableRow>
+                            <CTableDataCell colspan="6" style="text-align:center">No Records Found</CTableDataCell>
+                        </CTableRow>
                     </CTableBody>
                   </CTable>
                 </CCardBody>
@@ -80,13 +87,13 @@
         </CModal>
 
          <!-- For Viewing Tickets -->
-        <CModal alignment="center" size="lg" :visible="showViewModal" @close="() => { showViewModal = false }" backdrop="static">
+        <CModal alignment="center" size="lg" scrollable :visible="showViewModal" @close="() => { showViewModal = false }" backdrop="static">
             <CModalHeader>
                 <CModalTitle>List Event Tickets</CModalTitle>
             </CModalHeader>
             <CModalBody>
                 <CRow>
-                    <CCol :xs="4" v-for="ticket in event_tickets" :key="ticket.ticket_id">
+                    <CCol :xs="12" :md="12" :lg="4" v-for="ticket in event_tickets" :key="ticket.ticket_id">
                         <CWidgetStatsB
                             class="mb-3"
                             :progress="{ color: 'success', value: 75}"
@@ -94,11 +101,16 @@
                             <template #text>Capacity {{ ticket.ticket_capacity }}</template>
                             <template #title>{{ ticket.ticket_label }}</template>
                             <template #value>{{ ticket.ticket_price }}</template>
+                            
                         </CWidgetStatsB>
+                        <div class="del-ticket m-1" @click="deleteTicket(ticket)">
+                            <CIcon icon="cil-trash" size="xl" ></CIcon>
+                        </div>    
                     </CCol>
                 </CRow>    
             </CModalBody>
             <CModalFooter>
+                <span class="error" v-if="errors.delete_error" style="flex:1;justify-content:flex-start">{{ errors.delete_error}}</span>
                 <CButton color="secondary" @click="() => { showViewModal = false }">
                     Close
                 </CButton>
@@ -132,6 +144,7 @@ export default {
         },
         openViewModal(event){
             this.showViewModal = true
+            this.errors = []
             Event.get_event_tickets(event).then((response) => {
                 this.event_tickets = response.data.tickets
             }).catch((error) => {
@@ -149,6 +162,47 @@ export default {
             }).catch((error) => {
                 if(error.response.status === 422){
                     this.errors = error.response.data.errors
+                }
+            })
+        },
+        deleteTicket(ticket){
+            this.errors = []
+            Event.remove_tickets(ticket.ticket_id).then((response) => {
+                if(response.data != 0){
+                    this.event_tickets = this.event_tickets.filter((item) => {
+                        return item.ticket_id != ticket.ticket_id
+                    })
+                }
+                else{
+                    const data = {
+                        delete_error : "A Booking already done on this ticket. Cannot Delete Ticket."
+                    }
+                    this.errors = { ...this.errors, ...data}
+                    //this.errors['delete_error'] = "asalm"
+                }    
+            }).catch((error) => {
+                if(error.response.status === 401){
+                    this.$store.commit('setLogout')
+                    localStorage.removeItem("token")
+                    this.$router.push({name:"login"})
+                }
+            })
+        },
+        deleteEvent(event){
+            Event.remove_event(event.event_id).then((response) => {
+                if(response.data != 0){
+                    this.event_list = this.event_list.filter((item) => {
+                        return item.event_id != event.event_id
+                    })
+                }
+                else{
+                    console.log("cannot delete");
+                }
+            }).catch((error) => {
+                if(error.response.status === 401){
+                    this.$store.commit('setLogout')
+                    localStorage.removeItem("token")
+                    this.$router.push({name:"login"})
                 }
             })
         }

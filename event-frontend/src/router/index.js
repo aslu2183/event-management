@@ -5,6 +5,8 @@ import AddEvent from '../views/AddEventView.vue'
 import ListEvents from '../views/ListEventView.vue'
 import AddBooking from '../views/AddBookingView.vue'
 import ListBooking from '../views/ListBookingView.vue'
+import ReportView from '../views/EventReportView.vue'
+import TicketView from '../views/TicketReportView.vue'
 
 const routes = [
   {
@@ -49,7 +51,19 @@ const routes = [
     component : ListBooking,
     meta      : { requiresAuth : true}
 
-  }     
+  },
+  {
+    path      : '/report/events',
+    name      : 'sales-report',
+    component : ReportView,
+    meta      : { requiresAuth : true }
+  },
+  {
+    path      : '/report/tickets',
+    name      : 'sales-ticket-report',
+    component : TicketView,
+    meta      : { requiresAuth : true }
+  }        
 
     
  

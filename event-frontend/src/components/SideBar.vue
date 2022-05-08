@@ -54,9 +54,16 @@
                 <template #togglerContent>
                     <CIcon  customClassName="nav-icon" icon="cil-puzzle"/> Reports
                 </template>
-                <CNavItem href="#">
-                    <CIcon  customClassName="nav-icon" icon="cil-puzzle"/> Sales Report
-                </CNavItem>
+                <router-link :to="{'name':'sales-report'}" style="text-decoration:none">
+                    <CNavItem href="#">
+                        <CIcon  customClassName="nav-icon" icon="cil-puzzle"/> Event Sales
+                    </CNavItem>
+                </router-link>
+                <router-link :to="{'name':'sales-ticket-report'}" style="text-decoration:none">
+                    <CNavItem href="#">
+                        <CIcon  customClassName="nav-icon" icon="cil-puzzle"/> Ticket Sales
+                    </CNavItem>
+                </router-link>    
                 <!-- <CNavItem href="#">
                     <CIcon  customClassName="nav-icon" icon="cil-puzzle"/> List Bookings
                 </CNavItem> -->

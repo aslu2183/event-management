@@ -44,7 +44,7 @@ class BookingController extends Controller
      */
     public function show($id)
     {
-        //
+        return Booking::with('getEvents','getTickets')->find($id);
     }
 
     /**
@@ -67,7 +67,7 @@ class BookingController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return Booking::where('booking_id', $id)->delete();
     }
 
     

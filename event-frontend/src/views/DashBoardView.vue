@@ -31,34 +31,32 @@
                   <strong>New Events</strong>
                 </CCardHeader>
                 <CCardBody>
-                  <CTable>
+                  <CTable responsive>
                     <CTableHead>
                       <CTableRow>
                         <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                        <CTableHeaderCell scope="col">Class</CTableHeaderCell>
-                        <CTableHeaderCell scope="col">Heading</CTableHeaderCell>
-                        <CTableHeaderCell scope="col">Heading</CTableHeaderCell>
+                        <CTableHeaderCell scope="col">Date</CTableHeaderCell>
+                        <CTableHeaderCell scope="col">Name</CTableHeaderCell>
+                        <CTableHeaderCell scope="col">Start Date</CTableHeaderCell>
+                        <CTableHeaderCell scope="col">End Date</CTableHeaderCell>
                       </CTableRow>
                     </CTableHead>
-                    <CTableBody>
-                      <CTableRow>
-                        <CTableHeaderCell scope="row">1</CTableHeaderCell>
-                        <CTableDataCell>Mark</CTableDataCell>
-                        <CTableDataCell>Otto</CTableDataCell>
-                        <CTableDataCell>@mdo</CTableDataCell>
-                      </CTableRow>
-                      <CTableRow>
-                        <CTableHeaderCell scope="row">2</CTableHeaderCell>
-                        <CTableDataCell>Jacob</CTableDataCell>
-                        <CTableDataCell>Thornton</CTableDataCell>
-                        <CTableDataCell>@fat</CTableDataCell>
-                      </CTableRow>
-                      <CTableRow>
-                        <CTableHeaderCell scope="row">3</CTableHeaderCell>
-                        <CTableDataCell colspan="2">Larry the Bird</CTableDataCell>
-                        <CTableDataCell>@twitter</CTableDataCell>
-                      </CTableRow>
+                    <CTableBody v-if="events.length > 0">
+                        <CTableRow v-for="(event,index) in events" :key="event.event_id">
+                          <CTableHeaderCell scope="row">{{ index + 1 }}</CTableHeaderCell>
+                          <CTableDataCell>{{ event.created_at }}</CTableDataCell>
+                          <CTableDataCell>{{ event.event_title }}</CTableDataCell>
+                          <CTableDataCell>{{ event.event_start }}</CTableDataCell>
+                          <CTableDataCell>{{ event.event_end }}</CTableDataCell>
+                        </CTableRow>
                     </CTableBody>
+
+                    <CTableBody v-else>
+                        <CTableRow>
+                          <CTableDataCell colspan="4" style="text-align:center">No Records Found</CTableDataCell>
+                        </CTableRow>
+                    </CTableBody>
+
                   </CTable>
                 </CCardBody>
               </CCard>
@@ -72,34 +70,32 @@
                   <strong>New Bookings</strong>
                 </CCardHeader>
                 <CCardBody>
-                  <CTable>
+                  <CTable responsive>
                     <CTableHead>
                       <CTableRow>
                         <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                        <CTableHeaderCell scope="col">Class</CTableHeaderCell>
-                        <CTableHeaderCell scope="col">Heading</CTableHeaderCell>
-                        <CTableHeaderCell scope="col">Heading</CTableHeaderCell>
+                        <CTableHeaderCell scope="col">Date</CTableHeaderCell>
+                        <CTableHeaderCell scope="col">Name</CTableHeaderCell>
+                        <CTableHeaderCell scope="col">Mobile</CTableHeaderCell>
+                        <CTableHeaderCell scope="col">Event</CTableHeaderCell>
                       </CTableRow>
                     </CTableHead>
-                    <CTableBody>
-                      <CTableRow>
-                        <CTableHeaderCell scope="row">1</CTableHeaderCell>
-                        <CTableDataCell>Mark</CTableDataCell>
-                        <CTableDataCell>Otto</CTableDataCell>
-                        <CTableDataCell>@mdo</CTableDataCell>
-                      </CTableRow>
-                      <CTableRow>
-                        <CTableHeaderCell scope="row">2</CTableHeaderCell>
-                        <CTableDataCell>Jacob</CTableDataCell>
-                        <CTableDataCell>Thornton</CTableDataCell>
-                        <CTableDataCell>@fat</CTableDataCell>
-                      </CTableRow>
-                      <CTableRow>
-                        <CTableHeaderCell scope="row">3</CTableHeaderCell>
-                        <CTableDataCell colspan="2">Larry the Bird</CTableDataCell>
-                        <CTableDataCell>@twitter</CTableDataCell>
-                      </CTableRow>
+                    <CTableBody v-if="bookings.length > 0">
+                        <CTableRow v-for="(booking,index) in bookings" :key="booking.booking_id">
+                          <CTableHeaderCell scope="row">{{ index + 1 }}</CTableHeaderCell>
+                          <CTableDataCell>{{ booking.created_at }}</CTableDataCell>
+                          <CTableDataCell>{{ booking.booking_person }}</CTableDataCell>
+                          <CTableDataCell>{{ booking.booking_phone }}</CTableDataCell>
+                          <CTableDataCell>{{ booking?.get_events?.event_title }}</CTableDataCell>
+                        </CTableRow>
                     </CTableBody>
+
+                    <CTableBody v-else>
+                        <CTableRow>
+                          <CTableDataCell colspan="5" style="text-align:center">No Records Found</CTableDataCell>
+                        </CTableRow>
+                    </CTableBody>
+
                   </CTable>
                 </CCardBody>
               </CCard>
@@ -111,10 +107,27 @@
 
 <script>
 
-
+import DashBoard from '../apis/Dashboard'
 export default {
     name : "DashBoard",
-    
+    data(){
+      return {
+        events  : [],
+        bookings: []
+      }
+    },
+    mounted() {
+      DashBoard.list_dashboard().then((response) => {
+        this.events   = response.data.events;
+        this.bookings = response.data.bookings;
+      }).catch((error) => {
+        if(error.response.status === 401){
+          this.$store.commit('setLogout')
+          localStorage.removeItem("token")
+          this.$router.push({name:"login"})
+        }
+      })
+    }
 }
 </script>
 

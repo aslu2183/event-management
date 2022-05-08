@@ -24,7 +24,7 @@ export default {
     },
     mounted(){
         User.getUser().then((response) => {
-            console.log(response);
+            this.$store.commit('setUserData',response.data)
         })
         .catch((error) => {
             if(error.response.status === 401){
