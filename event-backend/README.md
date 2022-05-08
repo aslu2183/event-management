@@ -13,6 +13,8 @@ Insert gif or link to demo
 
 To deploy this project download the code or using clone the repository to your web server.
 
+Rename .env.example to .env
+
 Then run composer to install the dependencies
 ```bash
   composer install
