@@ -8,8 +8,8 @@ import CoreuiVue from '@coreui/vue'
 
 import '@coreui/coreui/dist/css/coreui.min.css'
 createApp(App)
-.use(router)
 .use(store)
+.use(router)
 .use(CoreuiVue)
 .provide('icons',icon)
 .component('CIcon',CIcon)

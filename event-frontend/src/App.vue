@@ -22,7 +22,13 @@ export default {
   },
   components : {
     HomeView
+  },
+  mounted(){
+    if(localStorage.getItem("token")){
+      this.$store.commit("setLogin")
+    }
   }
+
 }
 </script>
 
