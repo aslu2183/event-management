@@ -99,9 +99,11 @@ export default {
                 this.results = response.data
             }).catch((error) => {
                 if(error.response.status === 422){
+                    //For handling form validation errors
                     this.errors = error.response.data.errors
                 }
                 else if(error.response.status === 419){
+                    //if token expired, need to remove token from local storage and redirect to login
                     this.$store.commit('setLogout')
                     localStorage.removeItem("token")
                     this.$router.push({name:"login"})
@@ -122,6 +124,7 @@ export default {
             })
         }).catch((error) => {
             if(error.response.status === 401){
+                 //if token expired, need to remove token from local storage and redirect to login
                 this.$store.commit('setLogout')
                 localStorage.removeItem("token")
                 this.$router.push({name:"login"})

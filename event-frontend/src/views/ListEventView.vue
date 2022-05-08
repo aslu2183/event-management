@@ -181,7 +181,7 @@ export default {
                         delete_error : "A Booking already done on this ticket. Cannot Delete Ticket."
                     }
                     this.errors = { ...this.errors, ...data}
-                    //this.errors['delete_error'] = "asalm"
+                    
                 }    
             }).catch((error) => {
                 if(error.response.status === 401){

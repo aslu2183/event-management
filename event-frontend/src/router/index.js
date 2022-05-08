@@ -79,6 +79,7 @@ function isLoggedIn(){
   return localStorage.getItem("token")
 }
 
+//For redirecting routes by checking user logged in or not
 router.beforeEach((to, from ,next) => {
   if (to.meta.requiresAuth) {
     if(!isLoggedIn()){
