@@ -1,5 +1,12 @@
 <template>
-  
+    <CRow v-if="isloading">
+      <CCol :xs="12">
+          <Loader></Loader>
+      </CCol>
+    </CRow>
+
+    <CRow v-else>
+
           <CRow>
             <CCol :xs="6" :lg="3" :sm="6" >
               <CWidgetStatsC class="mb-3" :value="events_no" :progress="{ color: 'info', value: 75 }" title="Events">
@@ -114,7 +121,7 @@
               </CCard>
             </CCol>
           </CRow>
-
+    </CRow>
        
 </template>
 
@@ -123,6 +130,7 @@
 import DashBoard from '../apis/Dashboard'
 import { CChartBar } from '@coreui/vue-chartjs'
 import moment from 'moment'
+import Loader from '../components/Loader.vue'
 export default {
     name : "DashBoard",
     data(){
@@ -147,7 +155,8 @@ export default {
         users_no  : 0,
         events_no : 0,
         tickets_no: 0,
-        booking_no: 0
+        booking_no: 0,
+        isloading : true
       }
     },
     mounted() {
@@ -168,8 +177,10 @@ export default {
             return 0
           }
         })
+        this.isloading = false
         
       }).catch((error) => {
+        this.isloading = false
         if(error.response.status === 401){
           this.$store.commit('setLogout')
           localStorage.removeItem("token")
@@ -178,7 +189,8 @@ export default {
       })
     },
     components : {
-      CChartBar
+      CChartBar,
+      Loader
     },
     computed: {
       defaultData() {
