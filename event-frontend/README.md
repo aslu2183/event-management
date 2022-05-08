@@ -1,19 +1,40 @@
-# event-frontend
 
-## Project setup
-```
-npm install
+# Event Management - Front End
+
+Admin Panel for Event Management.
+
+
+
+
+## Deployment
+
+To deploy this project run
+
+Download the repo or clone it. Then run this commands. Before check whether nodejs is installed or not.
+
+```bash
+  npm install
 ```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
+After installing the dependencies, Update .env file (rename .env.example if .env file not exists)
+
+```bash
+  VUE_APP_API_URL="Your API Domain"
 ```
 
-### Compiles and minifies for production
-```
-npm run build
+After that run the command
+```bash
+  npm run build
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+After build, dist folder will be generated. Copy the files inside dist folder and upload to the webserver.
+
+Then Application will be ready to use.
+
+
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to your .env file
+
+`VUE_APP_API_URL`
+
