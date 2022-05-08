@@ -5,7 +5,7 @@
         :visible="isVisible"
         @visible-change="change_visible"
     >
-        <CSidebarBrand>Sidebar Brand </CSidebarBrand>
+        <CSidebarBrand>CAMEO </CSidebarBrand>
         <CSidebarNav>
             <li class="nav-title">DashBoard</li>
             <router-link :to="{'name':'dashboard'}" style="text-decoration:none">
