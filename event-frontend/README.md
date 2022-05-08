@@ -4,6 +4,9 @@
 Admin Panel for Event Management.
 
 
+## Demo
+
+https://event.cameomanjachola.com/
 
 
 ## Deployment
