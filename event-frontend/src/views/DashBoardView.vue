@@ -2,27 +2,40 @@
   
           <CRow>
             <CCol :xs="6" :lg="3" :sm="6" >
-              <CWidgetStatsC class="mb-3" value="87.500" :progress="{ color: 'info', value: 75 }" title="Visitors">
+              <CWidgetStatsC class="mb-3" :value="events_no" :progress="{ color: 'info', value: 75 }" title="Events">
+                <template #icon><CIcon icon="cil-book" height="36"/></template>
+                <template #title>Events</template>
+              </CWidgetStatsC>
+            </CCol>
+            <CCol :xs="6" :lg="3" :sm="6" >
+              <CWidgetStatsC class="mb-3" :value="tickets_no" :progress="{ color: 'success', value: 75 }" title="Tickets">
+                <template #icon><CIcon icon="cil-book" height="36"/></template>
+              </CWidgetStatsC>
+            </CCol>
+            <CCol :xs="6" :lg="3" :sm="6" >
+              <CWidgetStatsC class="mb-3" :value="booking_no" :progress="{ color: 'info', value: 75 }" title="Bookings">
+                <template #icon><CIcon icon="cil-book" height="36"/></template>
+              </CWidgetStatsC>
+            </CCol>
+            <CCol :xs="6" :lg="3" :sm="6" >
+              <CWidgetStatsC class="mb-3" :value="users_no" :progress="{ color: 'info', value: 75 }" title="Users">
                 <template #icon><CIcon icon="cil-people" height="36"/></template>
-                <template #title>Visitors</template>
-              </CWidgetStatsC>
-            </CCol>
-            <CCol :xs="6" :lg="3" :sm="6" >
-              <CWidgetStatsC class="mb-3" value="385" :progress="{ color: 'success', value: 75 }" title="New clients">
-                <template #icon><CIcon icon="cil-user-follow" height="36"/></template>
-              </CWidgetStatsC>
-            </CCol>
-            <CCol :xs="6" :lg="3" :sm="6" >
-              <CWidgetStatsC class="mb-3" value="1238" :progress="{ color: 'info', value: 75 }" title="Product sold">
-                <template #icon><CIcon icon="cil-basket" height="36"/></template>
-              </CWidgetStatsC>
-            </CCol>
-            <CCol :xs="6" :lg="3" :sm="6" >
-              <CWidgetStatsC class="mb-3" value="1238" :progress="{ color: 'info', value: 75 }" title="Product sold">
-                <template #icon><CIcon icon="cil-basket" height="36"/></template>
               </CWidgetStatsC>
             </CCol>
           </CRow> 
+
+          <!--Chart will render only when y-axis data available -->
+          <CRow v-if="ydata.length > 0">
+            <CCol :xs="12">
+              <CChartBar
+                style="height:300px"
+                :options="{ maintainAspectRatio: false }"
+                :data = defaultData
+              />
+            </CCol> 
+          </CRow>
+
+          
 
           <CRow class="mt-4">
             <CCol :xs="12">
@@ -44,10 +57,10 @@
                     <CTableBody v-if="events.length > 0">
                         <CTableRow v-for="(event,index) in events" :key="event.event_id">
                           <CTableHeaderCell scope="row">{{ index + 1 }}</CTableHeaderCell>
-                          <CTableDataCell>{{ event.created_at }}</CTableDataCell>
+                          <CTableDataCell>{{ moment().utc(event.created_at).format("DD-MM-YYYY") }}</CTableDataCell>
                           <CTableDataCell>{{ event.event_title }}</CTableDataCell>
-                          <CTableDataCell>{{ event.event_start }}</CTableDataCell>
-                          <CTableDataCell>{{ event.event_end }}</CTableDataCell>
+                          <CTableDataCell>{{ moment().utc(event.event_start).format("DD-MM-YYYY") }}</CTableDataCell>
+                          <CTableDataCell>{{ moment().utc(event.event_end).format("DD-MM-YYYY") }}</CTableDataCell>
                         </CTableRow>
                     </CTableBody>
 
@@ -83,9 +96,9 @@
                     <CTableBody v-if="bookings.length > 0">
                         <CTableRow v-for="(booking,index) in bookings" :key="booking.booking_id">
                           <CTableHeaderCell scope="row">{{ index + 1 }}</CTableHeaderCell>
-                          <CTableDataCell>{{ booking.created_at }}</CTableDataCell>
+                          <CTableDataCell>{{ moment().utc(booking.created_at).format("DD-MM-YYYY") }}</CTableDataCell>
                           <CTableDataCell>{{ booking.booking_person }}</CTableDataCell>
-                          <CTableDataCell>{{ booking.booking_phone }}</CTableDataCell>
+                          <CTableDataCell>{{ booking.booking_mobile }}</CTableDataCell>
                           <CTableDataCell>{{ booking?.get_events?.event_title }}</CTableDataCell>
                         </CTableRow>
                     </CTableBody>
@@ -108,18 +121,54 @@
 <script>
 
 import DashBoard from '../apis/Dashboard'
+import { CChartBar } from '@coreui/vue-chartjs'
+import moment from 'moment'
 export default {
     name : "DashBoard",
     data(){
       return {
         events  : [],
-        bookings: []
+        bookings: [],
+        labels  : [
+          'January',
+          'February',
+          'March',
+          'April',
+          'May',
+          'June',
+          'July',
+          'August',
+          'September',
+          'October',
+          'November',
+          'December',
+        ],
+        ydata     : [],
+        users_no  : 0,
+        events_no : 0,
+        tickets_no: 0,
+        booking_no: 0
       }
     },
     mounted() {
       DashBoard.list_dashboard().then((response) => {
-        this.events   = response.data.events;
-        this.bookings = response.data.bookings;
+        this.users_no   = response.data.user_cnt;
+        this.events_no  = response.data.events_cnt;
+        this.tickets_no = response.data.tickets_cnt;
+        this.booking_no = response.data.booking_cnt
+        this.events     = response.data.events;
+        this.bookings   = response.data.bookings;
+        this.ydata      = this.labels.map((item,i) => {
+          const check   = i + 1
+          const data    = response.data.chart_data.find((val) => val.month == check)
+          if(data){
+            return data.nos
+          }
+          else{
+            return 0
+          }
+        })
+        
       }).catch((error) => {
         if(error.response.status === 401){
           this.$store.commit('setLogout')
@@ -127,6 +176,28 @@ export default {
           this.$router.push({name:"login"})
         }
       })
+    },
+    components : {
+      CChartBar
+    },
+    computed: {
+      defaultData() {
+        return {
+          labels: this.labels,
+          datasets: [
+            {
+              label: 'Bookings Per Month',
+              backgroundColor: '#f87979',
+              data: this.ydata,
+            },
+          ],
+        }
+      }
+    },
+    methods : {
+      moment(){
+        return moment
+      }
     }
 }
 </script>

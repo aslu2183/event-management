@@ -38,6 +38,9 @@ Route::middleware('auth:api')->get('/remove-booking/{id}','BookingController@des
 
 Route::middleware('auth:api')->get('/get-dashboard','DashboardController@index');
 
+Route::middleware('auth:api')->get('/get-chart-data','DashboardController@getDataforCharts');
+
+
 
 
 

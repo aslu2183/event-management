@@ -140,6 +140,9 @@ export default {
         openModal(event){
             this.showModal = true
             this.form.event_id = event
+            this.form.ticket_label = ''
+            this.form.ticket_capacity = ''
+            this.form.ticket_price = ''
             this.errors = []
         },
         openViewModal(event){
