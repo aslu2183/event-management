@@ -18,6 +18,7 @@
                       placeholder="Username"
                       autocomplete="username"
                       v-model="form.email"
+                      @keyup.enter="handleSubmit"
                     />
                     
                   </CInputGroup>
@@ -33,6 +34,7 @@
                       placeholder="Password"
                       autocomplete="current-password"
                       v-model="form.password"
+                      @keyup.enter="handleSubmit"
                     />
                     
                   </CInputGroup>
@@ -40,7 +42,10 @@
                   </div>
                   <CRow>
                     <CCol :xs="6">
-                      <CButton color="primary" class="px-4" @click="handleSubmit"> Login </CButton>
+                      <CButton color="primary" class="px-4" @click="handleSubmit" :disabled="isloading"> 
+                        <CSpinner component="span" size="sm" aria-hidden="true" v-if="isloading"/>
+                        Login 
+                      </CButton>
                     </CCol>
                     
                   </CRow>
@@ -67,16 +72,20 @@ export default {
         email    : '',
         password : ''
       },
-      errors : []
+      errors : [],
+      isloading : false
     }
   },
   methods : {
     handleSubmit() {
+      this.isloading = true
       User.signIn(this.form).then((response) => {
         localStorage.setItem("token",response.data);
+        this.isloading = false
         this.$store.commit('setLogin');
         this.$router.push({name:"dashboard"})
       }).catch((error) => {
+        this.isloading = false
         if(error.response.status === 422){
           this.errors = error.response.data.errors
         }

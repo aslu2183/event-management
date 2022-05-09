@@ -22,7 +22,7 @@ Download the repo or clone it. Then run this commands. Before check whether node
 After installing the dependencies, Update .env file (rename .env.example if .env file not exists)
 
 ```bash
-  VUE_APP_API_URL="Your API Domain"
+  VUE_APP_API_URL="Your API Domain /api"
 ```
 
 After that run the command
